@@ -13,7 +13,7 @@ const features = process._linkedBinding('electron_common_features');
 const v8Util = process._linkedBinding('electron_common_v8_util');
 
 ifdescribe(features.isBuiltinSpellCheckerEnabled())('spellchecker', function () {
-  this.timeout(200 * 1000);
+  this.timeout((process.env.IS_ASAN ? 200 : 20) * 1000);
 
   let w: BrowserWindow;
 
