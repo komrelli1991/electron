@@ -23,8 +23,7 @@ describe('node feature', () => {
     });
   });
 
-  // Running child app under ASan might receive SIGKILL because of OOM.
-  ifit(!process.env.IS_ASAN)('does not hang when using the fs module in the renderer process', async () => {
+  it('does not hang when using the fs module in the renderer process', async () => {
     const appPath = path.join(mainFixturesPath, 'apps', 'libuv-hang', 'main.js');
     const appProcess = childProcess.spawn(process.execPath, [appPath], {
       cwd: path.join(mainFixturesPath, 'apps', 'libuv-hang'),
