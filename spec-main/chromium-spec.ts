@@ -18,6 +18,8 @@ const features = process._linkedBinding('electron_common_features');
 
 const fixturesPath = path.resolve(__dirname, '..', 'spec', 'fixtures');
 
+const isAsan = process.env.IS_ASAN;
+
 describe('reporting api', () => {
   // TODO(nornagon): this started failing a lot on CI. Figure out why and fix
   // it.
@@ -329,8 +331,7 @@ describe('web security', () => {
   });
 });
 
-// Running child app under ASan might receive SIGKILL because of OOM.
-ifdescribe(!process.env.IS_ASAN)('command line switches', () => {
+describe('command line switches', () => {
   let appProcess: ChildProcess.ChildProcessWithoutNullStreams | undefined;
   afterEach(() => {
     if (appProcess && !appProcess.killed) {
@@ -375,7 +376,8 @@ ifdescribe(!process.env.IS_ASAN)('command line switches', () => {
     ifit(process.platform === 'linux')('should not change LC_ALL when --lang is not set', async () => testLocale('', lcAll, true));
   });
 
-  describe('--remote-debugging-pipe switch', () => {
+  // TODO(nornagon): figure out why these tests fail under ASan.
+  ifdescribe(!isAsan)('--remote-debugging-pipe switch', () => {
     it('should expose CDP via pipe', async () => {
       const electronPath = process.execPath;
       appProcess = ChildProcess.spawn(electronPath, ['--remote-debugging-pipe'], {
@@ -417,7 +419,8 @@ ifdescribe(!process.env.IS_ASAN)('command line switches', () => {
     });
   });
 
-  describe('--remote-debugging-port switch', () => {
+  // TODO(nornagon): figure out why these tests fail under ASan.
+  ifdescribe(!isAsan)('--remote-debugging-port switch', () => {
     it('should display the discovery page', (done) => {
       const electronPath = process.execPath;
       let output = '';

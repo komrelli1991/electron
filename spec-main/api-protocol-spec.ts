@@ -705,7 +705,7 @@ describe('protocol module', () => {
   });
 
   describe('protocol.registerSchemeAsPrivileged', () => {
-    // Running child app under ASan might receive SIGKILL because of OOM.
+    // TODO(jeremy): figure out why this times out under ASan
     ifit(!process.env.IS_ASAN)('does not crash on exit', async () => {
       const appPath = path.join(__dirname, 'fixtures', 'api', 'custom-protocol-shutdown.js');
       const appProcess = ChildProcess.spawn(process.execPath, ['--enable-logging', appPath]);
